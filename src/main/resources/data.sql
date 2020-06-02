@@ -1,0 +1,3 @@
+insert into employee (id, version, deleted, employee_code, full_name, last_name, email, physical_address, postal_address, start_date, end_date, occupation, status,created_by,created_date) values
+('65ed6644718b11eabc550242ac130003',0,false,'emp1','John', 'Travolta', 'JohnT@hollywood.com','Fancy Mansion, Hollywood', 'VIP Postal Box',CURRENT_DATE, NULL,'Actor','Active','system',CURRENT_TIMESTAMP),
+('1061cfca718c11eabc550242ac130003',0,false,'emp2','Cristiano', 'Ronaldo', 'CR7@bestplayer.com','Real Madrid, Spain', 'Ballondor, France',CURRENT_DATE, NULL,'Soccer Player','Active','system', CURRENT_TIMESTAMP);

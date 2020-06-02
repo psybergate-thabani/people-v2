@@ -1,4 +1,4 @@
-package com.psybergate.people.people;
+package com.psybergate.people;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
