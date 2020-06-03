@@ -33,6 +33,34 @@ class EmployeeServiceTest {
     }
 
     @Test
+    void shouldReturnTrue_whenGivenEmployeeIdOfEmployeeThatExist() {
+        //Arrange
+        UUID employeeId = UUID.randomUUID();
+        when(employeeRepository.findByIdAndDeleted(employeeId, false)).thenReturn(employee);
+
+        //Act
+        boolean isValid = employeeService.validateEmployee(employeeId, false);
+
+        //Assert and Verify
+        assertTrue(isValid);
+        verify(employeeRepository).findByIdAndDeleted(employeeId, false);
+    }
+
+    @Test
+    void shouldReturnFalse_whenGivenEmployeeIdOfEmployeeThatDoesNotExist() {
+        //Arrange
+        UUID employeeId = UUID.randomUUID();
+        when(employeeRepository.findByIdAndDeleted(employeeId, false)).thenReturn(null);
+
+        //Act
+        boolean isValid = employeeService.validateEmployee(employeeId, false);
+
+        //Assert and Verify
+        assertFalse(isValid);
+        verify(employeeRepository).findByIdAndDeleted(employeeId, false);
+    }
+
+    @Test
     void shouldCreateNewEmployee_whenEmployeeIsCreated() {
         //Arrange
         when(employeeRepository.save(employee)).thenReturn(employee);

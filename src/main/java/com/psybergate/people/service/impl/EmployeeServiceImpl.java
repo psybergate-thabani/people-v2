@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -50,6 +51,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = retrieveEmployee(employeeId);
         employee.setDeleted(true);
         employeeRepository.save(employee);
+    }
+
+    @Override
+    @Transactional
+    public boolean validateEmployee(UUID employeeId, boolean deleted) {
+        Employee employee = employeeRepository.findByIdAndDeleted(employeeId, deleted);
+        return Objects.nonNull(employee);
     }
 
 }
