@@ -44,9 +44,7 @@ public class EmployeeController {
 
     @GetMapping("v1/employees/{employeeId}")
     public ResponseEntity<Employee> retrieveEmployee(@PathVariable UUID employeeId) {
-        System.out.println(employeeId);
         Employee employee = employeeService.retrieveEmployee(employeeId);
-        System.out.println(employee);
         return ResponseEntity.ok(employee);
     }
 
