@@ -2,5 +2,16 @@ image: maven:3.3.9
 pipelines:
   default:
     - step:
+        name: Clean
         script:
-          - mvn -version
+          - mvn -B clean # -B batch mode makes Maven less verbose
+    - step:
+        name: Package
+        script:
+          - mvn -B install # -B batch mode makes Maven less verbose
+    - step:
+        name: Docker build
+        script:
+          - docker login -u $MOSES_DOCKER_USERNAME -p $MOSES_DOCKER_PASSWORD
+          - docker build -t $MOSES_IMAGE_NAME .
+          - docker push $MOSES_IMAGE_NAME
