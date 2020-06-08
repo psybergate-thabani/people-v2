@@ -15,6 +15,6 @@ pipelines:
     - step:
         name: Docker build
         script:
-          - docker login -u $MOSES_DOCKER_USERNAME -p $MOSES_DOCKER_PASSWORD
-          - docker build -t $MOSES_IMAGE_NAME .
-          - docker push $MOSES_IMAGE_NAME
+          - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+          - docker build -t $IMAGE_NAME .
+          - docker push $IMAGE_NAME
