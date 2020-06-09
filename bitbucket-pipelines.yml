@@ -14,7 +14,8 @@ pipelines:
           - mvn -B install # -B batch mode makes Maven less verbose
           - ls -R
         artifacts:
-          - target/**
+          - people-module/target/**
+          - people-api/target/**
     - step:
         name: Docker build
         script:
