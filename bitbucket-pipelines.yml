@@ -12,6 +12,7 @@ pipelines:
         name: Package
         script:
           - mvn -B install # -B batch mode makes Maven less verbose
+          - ls -R
     - step:
         name: Docker build
         script:
