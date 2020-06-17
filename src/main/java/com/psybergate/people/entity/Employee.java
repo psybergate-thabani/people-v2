@@ -33,7 +33,7 @@ public class Employee extends BaseEntity {
 
     @NotBlank(message = "{email.notblank}")
     @Email(message = "{email.format}")
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @NotBlank(message = "{physicaladdress.notblank}")

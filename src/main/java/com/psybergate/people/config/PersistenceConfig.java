@@ -10,13 +10,13 @@ import javax.sql.DataSource;
 @Configuration
 @EnableJpaAuditing
 public class PersistenceConfig {
-    @Bean
-    public DataSource getDataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.postgresql.Driver");
-        dataSourceBuilder.url("jdbc:postgresql://localhost:5432/people");
-        dataSourceBuilder.username("psybergate");
-        dataSourceBuilder.password("password");
-        return dataSourceBuilder.build();
-    }
+//    @Bean
+//    public DataSource getDataSource() {
+//        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+//        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+//        dataSourceBuilder.url("jdbc:postgresql://localhost:5432/people");
+//        dataSourceBuilder.username("psybergate");
+//        dataSourceBuilder.password("password");
+//        return dataSourceBuilder.build();
+//    }
 }
