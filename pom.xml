@@ -89,7 +89,6 @@
                 <version>3.9.0</version>
                 <configuration>
                     <propertyFile>${liquibase.propertyFile}</propertyFile>
-<!--                    <propertyFileWillOverride>true</propertyFileWillOverride>-->
                 </configuration>
             </plugin>
         </plugins>
