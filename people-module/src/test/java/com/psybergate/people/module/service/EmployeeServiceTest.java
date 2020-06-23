@@ -39,7 +39,7 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(employeeId, false)).thenReturn(employee);
 
         //Act
-        boolean isValid = employeeService.validateEmployee(employeeId, false);
+        boolean isValid = employeeService.validateEmployee(employeeId);
 
         //Assert and Verify
         assertTrue(isValid);
@@ -53,7 +53,7 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(employeeId, false)).thenReturn(null);
 
         //Act
-        boolean isValid = employeeService.validateEmployee(employeeId, false);
+        boolean isValid = employeeService.validateEmployee(employeeId);
 
         //Assert and Verify
         assertFalse(isValid);

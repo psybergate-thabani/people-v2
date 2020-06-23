@@ -18,5 +18,5 @@ public interface EmployeeService {
 
     void deleteEmployee(UUID employeeId);
 
-    boolean validateEmployee(UUID employeeId, boolean deleted);
+    boolean validateEmployee(UUID employeeId);
 }

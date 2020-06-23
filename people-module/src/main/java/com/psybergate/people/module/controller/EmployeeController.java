@@ -23,9 +23,9 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.createEmployee(employee));
     }
 
-    @GetMapping(value = "v1/employees/{employeeId}/valid",params = "deleted")
-    public ResponseEntity<Boolean> validateEmployee(@PathVariable UUID employeeId, @RequestParam("deleted") boolean deleted){
-        return ResponseEntity.ok(employeeService.validateEmployee(employeeId, deleted));
+    @GetMapping(value = "v1/employees/{employeeId}/valid")
+    public boolean validateEmployee(@PathVariable UUID employeeId){
+        return employeeService.validateEmployee(employeeId);
     }
 
     @PutMapping("v1/employees/{employeeId}")

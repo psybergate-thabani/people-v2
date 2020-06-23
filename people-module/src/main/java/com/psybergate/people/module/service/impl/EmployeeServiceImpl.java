@@ -55,8 +55,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public boolean validateEmployee(UUID employeeId, boolean deleted) {
-        Employee employee = employeeRepository.findByIdAndDeleted(employeeId, deleted);
+    public boolean validateEmployee(UUID employeeId) {
+        Employee employee = employeeRepository.findByIdAndDeleted(employeeId, false);
         return Objects.nonNull(employee);
     }
 
