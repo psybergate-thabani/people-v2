@@ -42,6 +42,11 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.retrieveEmployees(deleted));
     }
 
+    @GetMapping(value = "v1/employees/{employeeId}/valid", params = {"deleted"})
+    public ResponseEntity<Boolean> validateEmployee(@PathVariable UUID employeeId, @RequestParam("deleted") Boolean deleted) {
+        return ResponseEntity.ok(employeeService.isValid(employeeId, deleted));
+    }
+
     @GetMapping("v1/employees/{employeeId}")
     public ResponseEntity<Employee> retrieveEmployee(@PathVariable UUID employeeId) {
         Employee employee = employeeService.retrieveEmployee(employeeId);

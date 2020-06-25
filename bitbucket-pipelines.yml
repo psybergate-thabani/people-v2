@@ -15,7 +15,6 @@ pipelines:
           - ls -R
         artifacts:
           - people-module/target/**
-          - people-api/target/**
     - step:
         name: Docker build
         script:

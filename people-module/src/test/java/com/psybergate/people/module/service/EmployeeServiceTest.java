@@ -132,7 +132,36 @@ class EmployeeServiceTest {
         //Act
         employeeService.deleteEmployee(id);
 
-        //Assert
+        //Assert and Verify
+        verify(employeeRepository).findByIdAndDeleted(id,false);
         verify(employeeRepository, times(1)).save(employee);
+    }
+
+    @Test
+    void shouldReturnTrue_whenGivenEmployeeIdOfEmployeeThatIsValid(){
+        //Arrange
+        UUID id = employee.getId();
+        when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(employee);
+
+        //Act
+        Boolean isValidEmployee = employeeService.isValid(id, false);
+
+        //Assert and Verify
+        verify(employeeRepository, times(1)).findByIdAndDeleted(id, false);
+        assertTrue(isValidEmployee);
+    }
+
+    @Test
+    void shouldReturnFalse_whenGivenEmployeeIdOfEmployeeThatIsNotValid(){
+        //Arrange
+        UUID id = employee.getId();
+        when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(null);
+
+        //Act
+        Boolean isValidEmployee = employeeService.isValid(id, false);
+
+        //Assert and Verify
+        verify(employeeRepository, times(1)).findByIdAndDeleted(id, false);
+        assertFalse(isValidEmployee);
     }
 }

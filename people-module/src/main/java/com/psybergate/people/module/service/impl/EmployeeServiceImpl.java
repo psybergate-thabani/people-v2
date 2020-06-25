@@ -60,4 +60,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return Objects.nonNull(employee);
     }
 
+    @Override
+    @Transactional
+    public Boolean isValid(UUID employeeId, Boolean deleted){
+        Employee employee = employeeRepository.findByIdAndDeleted(employeeId, deleted);
+        return !Objects.isNull(employee);
+    }
 }

@@ -18,7 +18,6 @@ import java.util.Map;
 
 @ControllerAdvice(annotations = {RestController.class})
 public class RestControllerAdvice extends ResponseEntityExceptionHandler {
-
     @ExceptionHandler({
             ValidationException.class,
             ObjectOptimisticLockingFailureException.class
