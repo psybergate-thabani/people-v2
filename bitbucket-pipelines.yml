@@ -7,14 +7,14 @@ pipelines:
     - step:
         name: Clean
         script:
-          - mvn -B clean # -B batch mode makes Maven less verbose
+          - mvn -B clean -P dev # -B batch mode makes Maven less verbose
     - step:
         name: Package
         script:
-          - mvn -B install # -B batch mode makes Maven less verbose
+          - mvn -B install -P dev # -B batch mode makes Maven less verbose
           - ls -R
         artifacts:
-          - target/**
+          - people-module/target/**
     - step:
         name: Docker build
         script:
