@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -55,14 +57,16 @@ public class Employee extends BaseEntity {
     @Column(name = "occupation", nullable = false)
     private String occupation;
 
-    @Column(name = "status")
-    private String status;
+    @NotNull(message = "{status.notblank}")
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EmployeeStatus status;
 
     public Employee() {
     }
 
     public Employee(String employeeCode, String fullName, String lastName, String email, String physicalAddress,
-                    String postalAddress, LocalDateTime createDate, LocalDate startDate, String occupation, String status) {
+                    String postalAddress, LocalDateTime createDate, LocalDate startDate, String occupation, EmployeeStatus status) {
         this.employeeCode = employeeCode;
         this.fullName = fullName;
         this.lastName = lastName;

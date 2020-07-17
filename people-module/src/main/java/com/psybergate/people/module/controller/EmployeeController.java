@@ -58,4 +58,10 @@ public class EmployeeController {
         employeeService.deleteEmployee(employeeId);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("v1/employees/{employeeId}/terminate")
+    public ResponseEntity<Void> terminateEmployee(@PathVariable UUID employeeId){
+        employeeService.terminateEmployee(employeeId);
+        return ResponseEntity.ok().build();
+    }
 }

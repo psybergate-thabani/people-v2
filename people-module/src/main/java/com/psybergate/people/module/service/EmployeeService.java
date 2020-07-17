@@ -21,4 +21,6 @@ public interface EmployeeService {
     boolean validateEmployee(UUID employeeId);
 
     Boolean isValid(UUID employeeId, Boolean deleted);
+
+    Employee terminateEmployee(UUID employeeId);
 }
