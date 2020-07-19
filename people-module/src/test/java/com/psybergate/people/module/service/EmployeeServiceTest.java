@@ -1,5 +1,7 @@
 package com.psybergate.people.module.service;
 
+
+import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
 import com.psybergate.people.module.repository.EmployeeRepository;
 import com.psybergate.people.module.service.impl.EmployeeServiceImpl;
@@ -39,10 +41,10 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(employeeId, false)).thenReturn(employee);
 
         //Act
-        boolean isValid = employeeService.validateEmployee(employeeId);
+        ValidationDTO employeeValidation = employeeService.validateEmployee(employeeId);
 
         //Assert and Verify
-        assertTrue(isValid);
+        assertTrue(employeeValidation.getExist());
         verify(employeeRepository).findByIdAndDeleted(employeeId, false);
     }
 
@@ -53,10 +55,10 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(employeeId, false)).thenReturn(null);
 
         //Act
-        boolean isValid = employeeService.validateEmployee(employeeId);
+        ValidationDTO employeeValidation = employeeService.validateEmployee(employeeId);
 
         //Assert and Verify
-        assertFalse(isValid);
+        assertFalse(employeeValidation.getExist());
         verify(employeeRepository).findByIdAndDeleted(employeeId, false);
     }
 
@@ -133,35 +135,35 @@ class EmployeeServiceTest {
         employeeService.deleteEmployee(id);
 
         //Assert and Verify
-        verify(employeeRepository).findByIdAndDeleted(id,false);
+        verify(employeeRepository).findByIdAndDeleted(id, false);
         verify(employeeRepository, times(1)).save(employee);
     }
 
     @Test
-    void shouldReturnTrue_whenGivenEmployeeIdOfEmployeeThatIsValid(){
+    void shouldReturnTrue_whenGivenEmployeeIdOfEmployeeThatIsValid() {
         //Arrange
         UUID id = employee.getId();
         when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(employee);
 
         //Act
-        Boolean isValidEmployee = employeeService.isValid(id, false);
+        ValidationDTO employeeValidation = employeeService.validateEmployee(id, false);
 
         //Assert and Verify
         verify(employeeRepository, times(1)).findByIdAndDeleted(id, false);
-        assertTrue(isValidEmployee);
+        assertTrue(employeeValidation.getExist());
     }
 
     @Test
-    void shouldReturnFalse_whenGivenEmployeeIdOfEmployeeThatIsNotValid(){
+    void shouldReturnFalse_whenGivenEmployeeIdOfEmployeeThatIsNotValid() {
         //Arrange
         UUID id = employee.getId();
         when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(null);
 
         //Act
-        Boolean isValidEmployee = employeeService.isValid(id, false);
+        ValidationDTO employeeValidation = employeeService.validateEmployee(id, false);
 
         //Assert and Verify
         verify(employeeRepository, times(1)).findByIdAndDeleted(id, false);
-        assertFalse(isValidEmployee);
+        assertFalse(employeeValidation.getExist());
     }
 }

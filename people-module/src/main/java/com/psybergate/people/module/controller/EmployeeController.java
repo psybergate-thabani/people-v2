@@ -1,5 +1,6 @@
 package com.psybergate.people.module.controller;
 
+import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
 import com.psybergate.people.module.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,9 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.createEmployee(employee));
     }
 
-    @GetMapping(value = "v1/employees/{employeeId}/valid")
-    public boolean validateEmployee(@PathVariable UUID employeeId){
-        return employeeService.validateEmployee(employeeId);
+    @GetMapping(value = "v1/employees/{employeeId}/validate")
+    public ResponseEntity<ValidationDTO> validateEmployee(@PathVariable UUID employeeId){
+        return ResponseEntity.ok(employeeService.validateEmployee(employeeId));
     }
 
     @PutMapping("v1/employees/{employeeId}")
@@ -42,9 +43,9 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.retrieveEmployees(deleted));
     }
 
-    @GetMapping(value = "v1/employees/{employeeId}/valid", params = {"deleted"})
-    public ResponseEntity<Boolean> validateEmployee(@PathVariable UUID employeeId, @RequestParam("deleted") Boolean deleted) {
-        return ResponseEntity.ok(employeeService.isValid(employeeId, deleted));
+    @GetMapping(value = "v1/employees/{employeeId}/validate", params = {"deleted"})
+    public ResponseEntity<ValidationDTO> validateEmployee(@PathVariable UUID employeeId, @RequestParam("deleted") Boolean deleted) {
+        return ResponseEntity.ok(employeeService.validateEmployee(employeeId, deleted));
     }
 
     @GetMapping("v1/employees/{employeeId}")

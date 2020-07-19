@@ -1,6 +1,7 @@
 package com.psybergate.people.module.service.impl;
 
 
+import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
 import com.psybergate.people.module.repository.EmployeeRepository;
 import com.psybergate.people.module.service.EmployeeService;
@@ -55,15 +56,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public boolean validateEmployee(UUID employeeId) {
+    public ValidationDTO validateEmployee(UUID employeeId) {
         Employee employee = employeeRepository.findByIdAndDeleted(employeeId, false);
-        return Objects.nonNull(employee);
+        return new ValidationDTO(Objects.nonNull(employee));
     }
 
     @Override
     @Transactional
-    public Boolean isValid(UUID employeeId, Boolean deleted){
+    public ValidationDTO validateEmployee(UUID employeeId, Boolean deleted) {
         Employee employee = employeeRepository.findByIdAndDeleted(employeeId, deleted);
-        return !Objects.isNull(employee);
+        return new ValidationDTO(Objects.nonNull(employee));
     }
 }

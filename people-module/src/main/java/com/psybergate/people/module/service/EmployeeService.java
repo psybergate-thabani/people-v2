@@ -1,6 +1,7 @@
 package com.psybergate.people.module.service;
 
 
+import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface EmployeeService {
 
     void deleteEmployee(UUID employeeId);
 
-    boolean validateEmployee(UUID employeeId);
+    ValidationDTO validateEmployee(UUID employeeId);
 
-    Boolean isValid(UUID employeeId, Boolean deleted);
+    ValidationDTO validateEmployee(UUID employeeId, Boolean deleted);
 }
