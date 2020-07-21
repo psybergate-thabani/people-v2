@@ -1,5 +1,8 @@
 package com.psybergate.people.module.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
 import com.psybergate.people.module.entity.EmployeeStatus;
 import com.psybergate.people.module.messaging.PeopleMessageResource;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -43,10 +47,10 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(employeeId, false)).thenReturn(employee);
 
         //Act
-        boolean isValid = employeeService.validateEmployee(employeeId);
+        ValidationDTO employeeValidation = employeeService.validateEmployee(employeeId);
 
         //Assert and Verify
-        assertTrue(isValid);
+        assertTrue(employeeValidation.getExist());
         verify(employeeRepository).findByIdAndDeleted(employeeId, false);
     }
 
@@ -57,10 +61,10 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(employeeId, false)).thenReturn(null);
 
         //Act
-        boolean isValid = employeeService.validateEmployee(employeeId);
+        ValidationDTO employeeValidation = employeeService.validateEmployee(employeeId);
 
         //Assert and Verify
-        assertFalse(isValid);
+        assertFalse(employeeValidation.getExist());
         verify(employeeRepository).findByIdAndDeleted(employeeId, false);
     }
 
@@ -149,11 +153,11 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(employee);
 
         //Act
-        Boolean isValidEmployee = employeeService.isValid(id, false);
+        ValidationDTO validateEmployee = employeeService.validateEmployee(id, false);
 
         //Assert and Verify
         verify(employeeRepository, times(1)).findByIdAndDeleted(id, false);
-        assertTrue(isValidEmployee);
+        assertTrue(validateEmployee.getExist());
     }
 
     @Test
@@ -163,11 +167,11 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(null);
 
         //Act
-        Boolean isValidEmployee = employeeService.isValid(id, false);
+        ValidationDTO validateEmployee = employeeService.validateEmployee(id, false);
 
         //Assert and Verify
         verify(employeeRepository, times(1)).findByIdAndDeleted(id, false);
-        assertFalse(isValidEmployee);
+        assertFalse(validateEmployee.getExist());
     }
 
     @Test
@@ -182,7 +186,24 @@ class EmployeeServiceTest {
         //Assert and Verify
         assertEquals(employee.getStatus(), EmployeeStatus.TERMINATED);
         verify(employeeRepository).findByIdAndDeleted(id, false);
-        verify(employeeRepository, times(1)).save(employee);
+        verify(employeeRepository).save(employee);
         verify(mockPeopleMessageResource).broadcastTerminateEmployee(terminatedEmployee);
+    }
+
+    @Test
+    void shouldThrowValidationException_whenTerminatingTerminatedEmployee() {
+        //Arrange
+        UUID id = employee.getId();
+        when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(employee);
+
+        //Act
+        employee.setStatus(EmployeeStatus.TERMINATED);
+
+        //Assert
+        assertThrows(ValidationException.class, () -> {
+            Employee terminatedEmployee = employeeService.terminateEmployee(id);
+        });
+
+
     }
 }
