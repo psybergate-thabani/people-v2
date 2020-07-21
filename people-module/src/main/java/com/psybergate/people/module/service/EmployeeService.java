@@ -1,6 +1,5 @@
 package com.psybergate.people.module.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
 

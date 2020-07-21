@@ -1,6 +1,6 @@
 --liquibase formatted sql
 --changeset thabani:create_employee_table
-CREATE TABLE employee(
+CREATE TABLE IF NOT EXISTS employee(
     id                  UUID PRIMARY KEY,
     version             BIGINT,
     deleted             BOOLEAN NOT NULL,
