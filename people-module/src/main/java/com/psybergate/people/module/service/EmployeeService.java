@@ -1,6 +1,5 @@
 package com.psybergate.people.module.service;
 
-
 import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
 
@@ -18,6 +17,8 @@ public interface EmployeeService {
     Employee updateEmployee(Employee employee);
 
     void deleteEmployee(UUID employeeId);
+
+    Employee terminateEmployee(UUID employeeId);
 
     ValidationDTO validateEmployee(UUID employeeId);
 

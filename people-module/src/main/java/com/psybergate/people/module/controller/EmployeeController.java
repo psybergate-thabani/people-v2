@@ -25,7 +25,7 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "v1/employees/{employeeId}/validate")
-    public ResponseEntity<ValidationDTO> validateEmployee(@PathVariable UUID employeeId){
+    public ResponseEntity<ValidationDTO> validateEmployee(@PathVariable UUID employeeId) {
         return ResponseEntity.ok(employeeService.validateEmployee(employeeId));
     }
 
@@ -57,6 +57,12 @@ public class EmployeeController {
     @DeleteMapping("v1/employees/{employeeId}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable UUID employeeId) {
         employeeService.deleteEmployee(employeeId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("v1/employees/{employeeId}/terminate")
+    public ResponseEntity<Void> terminateEmployee(@PathVariable UUID employeeId) {
+        employeeService.terminateEmployee(employeeId);
         return ResponseEntity.ok().build();
     }
 }

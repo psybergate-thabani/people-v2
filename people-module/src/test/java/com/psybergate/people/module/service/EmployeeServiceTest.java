@@ -1,8 +1,9 @@
 package com.psybergate.people.module.service;
 
-
 import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
+import com.psybergate.people.module.entity.EmployeeStatus;
+import com.psybergate.people.module.messaging.PeopleMessageResource;
 import com.psybergate.people.module.repository.EmployeeRepository;
 import com.psybergate.people.module.service.impl.EmployeeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -24,14 +26,16 @@ import static org.mockito.Mockito.*;
 class EmployeeServiceTest {
     @Mock
     private EmployeeRepository employeeRepository;
+    @Mock
+    private PeopleMessageResource mockPeopleMessageResource;
     private EmployeeService employeeService;
     private Employee employee;
 
     @BeforeEach
     void setUp() {
-        employeeService = new EmployeeServiceImpl(employeeRepository);
+        employeeService = new EmployeeServiceImpl(employeeRepository, mockPeopleMessageResource);
         employee = new Employee("emp1", "John", "Doe", "JohnD@resoma.com", "78 Home Address, Johannesburg",
-                "79 Postal Address, Johannesburg", LocalDateTime.now(), LocalDate.now(), "Developer", "Active");
+                "79 Postal Address, Johannesburg", LocalDateTime.now(), LocalDate.now(), "Developer", EmployeeStatus.ACTIVE);
     }
 
     @Test
@@ -79,11 +83,11 @@ class EmployeeServiceTest {
     void shouldReturnListOfEmployees_WhenRetrievingEmployees() {
         //Arrange
         Employee employeeA = new Employee("empA", "John", "Doe", "JohnD@resoma.com", "78 Home Address, Johannesburg",
-                "79 Postal Address, Johannesburg", LocalDateTime.now(), LocalDate.now(), "Developer", "Active");
+                "79 Postal Address, Johannesburg", LocalDateTime.now(), LocalDate.now(), "Developer", EmployeeStatus.ACTIVE);
         Employee employeeB = new Employee("empB", "John", "Doe", "JohnD@resoma.com", "78 Home Address, Johannesburg",
-                "79 Postal Address, Johannesburg", LocalDateTime.now(), LocalDate.now(), "Developer", "Active");
+                "79 Postal Address, Johannesburg", LocalDateTime.now(), LocalDate.now(), "Developer", EmployeeStatus.ACTIVE);
         Employee employeeC = new Employee("empC", "John", "Doe", "JohnD@resoma.com", "78 Home Address, Johannesburg",
-                "79 Postal Address, Johannesburg", LocalDateTime.now(), LocalDate.now(), "Developer", "Active");
+                "79 Postal Address, Johannesburg", LocalDateTime.now(), LocalDate.now(), "Developer", EmployeeStatus.ACTIVE);
         List<Employee> employees = Arrays.asList(employeeA, employeeB, employeeC);
         when(employeeRepository.findAllByDeleted(true)).thenReturn(employees);
 
@@ -135,6 +139,7 @@ class EmployeeServiceTest {
         employeeService.deleteEmployee(id);
 
         //Assert and Verify
+        assertTrue(employee.isDeleted());
         verify(employeeRepository).findByIdAndDeleted(id, false);
         verify(employeeRepository, times(1)).save(employee);
     }
@@ -146,11 +151,11 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(employee);
 
         //Act
-        ValidationDTO employeeValidation = employeeService.validateEmployee(id, false);
+        ValidationDTO validateEmployee = employeeService.validateEmployee(id, false);
 
         //Assert and Verify
         verify(employeeRepository, times(1)).findByIdAndDeleted(id, false);
-        assertTrue(employeeValidation.getExist());
+        assertTrue(validateEmployee.getExist());
     }
 
     @Test
@@ -160,10 +165,41 @@ class EmployeeServiceTest {
         when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(null);
 
         //Act
-        ValidationDTO employeeValidation = employeeService.validateEmployee(id, false);
+        ValidationDTO validateEmployee = employeeService.validateEmployee(id, false);
 
         //Assert and Verify
         verify(employeeRepository, times(1)).findByIdAndDeleted(id, false);
-        assertFalse(employeeValidation.getExist());
+        assertFalse(validateEmployee.getExist());
+    }
+
+    @Test
+    void shouldTerminateEmployee_whenEmployeeIsTerminated() {
+        //Arrange
+        UUID id = employee.getId();
+        when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(employee);
+
+        //Act
+        Employee terminatedEmployee = employeeService.terminateEmployee(id);
+
+        //Assert and Verify
+        assertEquals(employee.getStatus(), EmployeeStatus.TERMINATED);
+        verify(employeeRepository).findByIdAndDeleted(id, false);
+        verify(employeeRepository).save(employee);
+        verify(mockPeopleMessageResource).broadcastTerminateEmployee(terminatedEmployee);
+    }
+
+    @Test
+    void shouldThrowValidationException_whenTerminatingTerminatedEmployee() {
+        //Arrange
+        UUID id = employee.getId();
+        when(employeeRepository.findByIdAndDeleted(id, false)).thenReturn(employee);
+
+        //Act
+        employee.setStatus(EmployeeStatus.TERMINATED);
+
+        //Assert
+        assertThrows(ValidationException.class, () -> {
+            Employee terminatedEmployee = employeeService.terminateEmployee(id);
+        });
     }
 }

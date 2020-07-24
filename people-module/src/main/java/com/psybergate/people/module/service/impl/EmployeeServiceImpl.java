@@ -3,6 +3,8 @@ package com.psybergate.people.module.service.impl;
 
 import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
+import com.psybergate.people.module.entity.EmployeeStatus;
+import com.psybergate.people.module.messaging.PeopleMessageResource;
 import com.psybergate.people.module.repository.EmployeeRepository;
 import com.psybergate.people.module.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -18,10 +22,12 @@ import java.util.UUID;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository employeeRepository;
+    private PeopleMessageResource peopleMessageResource;
 
     @Autowired
-    public EmployeeServiceImpl(@Valid EmployeeRepository employeeRepository) {
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository, PeopleMessageResource peopleMessageResource) {
         this.employeeRepository = employeeRepository;
+        this.peopleMessageResource = peopleMessageResource;
     }
 
     @Override
@@ -52,6 +58,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = retrieveEmployee(employeeId);
         employee.setDeleted(true);
         employeeRepository.save(employee);
+    }
+
+    @Override
+    @Transactional
+    public Employee terminateEmployee(UUID employeeId) {
+        Employee employee = retrieveEmployee(employeeId);
+        if (EmployeeStatus.TERMINATED.equals(employee.getStatus())) {
+            throw new ValidationException("Cannot terminate terminated employee.");
+        }
+        employee.setStatus(EmployeeStatus.TERMINATED);
+        employee.setEndDate(LocalDate.now());
+        Employee terminatedEmployee = employeeRepository.save(employee);
+        peopleMessageResource.broadcastTerminateEmployee(terminatedEmployee);
+        return terminatedEmployee;
     }
 
     @Override

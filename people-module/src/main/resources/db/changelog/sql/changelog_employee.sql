@@ -17,5 +17,5 @@ CREATE TABLE IF NOT EXISTS employee(
     start_date          TIMESTAMP NOT NULL,
     end_date            TIMESTAMP,
     occupation          VARCHAR(255) NOT NULL,
-    status              VARCHAR(255)
+    status              VARCHAR(25) NOT NULL
 );
