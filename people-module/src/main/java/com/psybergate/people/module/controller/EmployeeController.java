@@ -3,7 +3,9 @@ package com.psybergate.people.module.controller;
 import com.psybergate.people.module.dto.ValidationDTO;
 import com.psybergate.people.module.entity.Employee;
 import com.psybergate.people.module.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,12 +14,16 @@ import javax.validation.ValidationException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RequestMapping(path = "api/people")
 @RestController
 public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Value("${eureka.instance.instance-id}")
+    private String instanceId;
 
     @PostMapping("v1/employees")
     public ResponseEntity<Employee> captureEmployee(@RequestBody @Valid Employee employee) {
@@ -40,6 +46,7 @@ public class EmployeeController {
 
     @GetMapping(value = "v1/employees", params = {"deleted"})
     public ResponseEntity<List<Employee>> retrieveEmployees(@RequestParam("deleted") boolean deleted) {
+        log.info("Instance Id: {}", instanceId);
         return ResponseEntity.ok(employeeService.retrieveEmployees(deleted));
     }
 
