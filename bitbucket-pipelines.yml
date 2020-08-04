@@ -9,6 +9,7 @@ pipelines:
     - step:
           script:
             - git push --all git@github.com:psybergate-thabani/people-v2.git
+
     - step:
         name: Clean
         script:
