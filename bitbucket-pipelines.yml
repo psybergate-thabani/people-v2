@@ -7,9 +7,9 @@ pipelines:
     depth: full
   default:
     - step:
+          name: Pushing changes to github
           script:
             - git push -u git@github.com:psybergate-thabani/people-v2.git
-            # -B batch mode makes Maven less verbose
     - step:
         name: Clean
         script:
