@@ -8,7 +8,7 @@ pipelines:
   default:
     - step:
           script:
-            - git clone --mirror git clone --mirror git@bitbucket.org:thabanijiyane@bitbucket.org/psybergate/people-v2.git
+            - git clone --mirror ssh://git@bitbucket.org:thabanijiyane@bitbucket.org/psybergate/people-v2.git
             - cd people-v2.git
             - git remote update --prune
             - git push --mirror git@github.com:psybergate-thabani/people-v2.git
