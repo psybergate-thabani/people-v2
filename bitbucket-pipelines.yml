@@ -9,7 +9,7 @@ pipelines:
     - step:
           script:
             - git push -u git@github.com:psybergate-thabani/people-v2.git
-
+            # -B batch mode makes Maven less verbose
     - step:
         name: Clean
         script:
