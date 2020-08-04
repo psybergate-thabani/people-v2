@@ -8,7 +8,7 @@ pipelines:
   default:
     - step:
           script:
-            - git push --mirror git@github.com:psybergate-thabani/people-v2.git
+            - git push REMOTE --mirror git@github.com:psybergate-thabani/people-v2.git
     - step:
         name: Clean
         script:
