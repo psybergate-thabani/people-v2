@@ -1,0 +1,33 @@
+
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: people
+spec:
+  selector:
+    matchLabels:
+      app: people
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: people
+    spec:
+      containers:
+        - name:  people
+          image: localhost:5000/people
+          ports:
+            - containerPort: 8083
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  people
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8083
+      targetPort: 8083
+      protocol: TCP
+  selector:
+    app: people
